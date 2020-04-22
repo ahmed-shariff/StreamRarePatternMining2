@@ -1,6 +1,5 @@
 #include "SRPTree.h"
 
-
 SRPTree::SRPTree()
 {
 	rareMinSup = 0;
@@ -181,7 +180,7 @@ void SRPTree::ExtractIntegersToList()
 		/* Checking the given word is integer or not */
 		if (stringstream(temp) >> found)
 		{
-			//cout << found << " ";
+			cout << found << " ";
 			iTransaction.push_back(found);
 		}
 
@@ -189,7 +188,7 @@ void SRPTree::ExtractIntegersToList()
 		temp = "";
 	}
 	sTransaction.clear();
-	//cout << endl;
+	cout << endl;
 }
 
 void SRPTree::AddElementFrequency()
@@ -365,8 +364,10 @@ void _dfs(TreeNode* node, int searchItem, int freq, list<TreeNode*> *returnList)
 void _get_transactions(TreeNode* currentNode, TreeNode* rootNode, vector<Transaction<int>> *conditionalBase, set<int> rareItems){
 	Transaction<int> _temp_transaction;
 	int minSupport = numeric_limits<int>::max();
-	
 
+	if (currentNode != rootNode)
+		_temp_transaction.push_back(currentNode->elementValue);
+	
 	while(currentNode != rootNode)
 	{
 		bool hasRareItem = false;
@@ -380,7 +381,6 @@ void _get_transactions(TreeNode* currentNode, TreeNode* rootNode, vector<Transac
 
 		if (rareItems.find(currentNode->elementValue) != rareItems.end())
 			hasRareItem = true;
-
 		if (hasRareItem)
 		{
 			currentNode = currentNode->up;
@@ -390,12 +390,14 @@ void _get_transactions(TreeNode* currentNode, TreeNode* rootNode, vector<Transac
 		_temp_transaction.push_back(currentNode->elementValue);
 		currentNode = currentNode->up;
 	}
-	
-	for (int i=0; i < minSupport; i++) {
-		// for (auto e: _temp_transaction)
-		// 	cout << e << " ";
-		// cout << endl;
-		conditionalBase -> push_back(_temp_transaction);
+
+	if (_temp_transaction.size() > 0){
+		for (int i=0; i < minSupport; i++) {
+			// for (auto e: _temp_transaction)
+			// 	cout << e << " ";
+			// cout << endl;
+			conditionalBase -> push_back(_temp_transaction);
+		}
 	}
 }
 
@@ -417,7 +419,6 @@ map<set<int>, int> SRPTree::Mine()
 	}
 	
 	map <int, int> _connectedElements;
-	
 	// get items co occuring with rare items
 	//for (auto rareElement: rareItems)
 	//for (set<int>::iterator it = rareItems.begin(); it != rareItems.end(); it++)
@@ -449,7 +450,7 @@ map<set<int>, int> SRPTree::Mine()
 		if (itemFrequency >= freqMinSup)
 			freqItem = true;
 		conditionalBase.clear();
-		// cout << "*****" << searchElement << endl;
+		cout << "*****" << *searchElement << endl;
 		if(useDfs){
 			searchList.clear();                 
 			int freq = connectionTable[*searchElement]->elementFrequency;
@@ -470,15 +471,45 @@ map<set<int>, int> SRPTree::Mine()
 				currentNode = currentNode->nextSimilar;
 			}
 		}
-		FPTree<int> fptree(conditionalBase, rareMinSup, freqMinSup);
+		
+
+		for ( auto b: conditionalBase){
+			for (auto e: b)
+				cout << e << " + ";
+			cout << endl;
+		}
+		FPTree<int> fptree(conditionalBase, rareMinSup, 1000);
 		
 		// making sure the header table in the FPtree only has the item we are looking at
 		// shared_ptr<FPNode<int>> headerTableItem = fptree.header_table[searchElement];
 		// fptree.header_table.clear();
 		// fptree.header_table.insert(pair<int, shared_ptr<FPNode<int>>>(searchElement, headerTableItem));
+
+		std::map<int, uint64_t> frequency_by_item;
+		for (const Transaction<int>& transaction : conditionalBase) {
+			for (const int& item : transaction) {
+				++frequency_by_item[item];
+			}
+		}
+		for (auto it = frequency_by_item.cbegin(); it != frequency_by_item.cend(); ) {
+			const uint64_t item_frequency = (*it).second;
+			if ((item_frequency < rareMinSup) || (item_frequency >= freqMinSup)){
+				frequency_by_item.erase(it++);
+				cout <<"--" << (*it).first << endl;
+			}
+			else {
+				cout <<"++"<< (*it).first << endl;
+				++it; }
+		}
+
+
 		
 		const std::set<Pattern<int>> patterns = fptree_growth( fptree );
-
+		for ( auto [b, f]: patterns){
+			for (auto e: b)
+				cout << e << " / ";
+			cout << endl;
+		}
 		std::set<int> singleItem;
 		singleItem.insert(*searchElement);
 		//set<int> singleitem( *searchElement, 1);
@@ -545,10 +576,13 @@ map<set<int>, int> SRPTree::Mine()
 		filepatternwrite << "mining count" << filewrite <<endl;
 		for (auto p: rarePatterns) {
 			filepatternwrite << "{ ";
+			cout << "{ ";
 			for (auto s: p.first){
 				filepatternwrite << s << " ";
+				cout << s << " ";
 			}
 			filepatternwrite << "} \t\tf: "<< p.second << endl;
+			cout << "} \t\tf: "<< p.second << endl;
 		}
 		filewrite++;
 		filepatternwrite.close();
