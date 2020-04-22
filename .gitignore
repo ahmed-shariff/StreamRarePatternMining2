@@ -1,0 +1,6 @@
+data/
+build/
+*~
+*#
+**/*.out
+*.txt
