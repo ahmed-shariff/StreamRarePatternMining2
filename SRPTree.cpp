@@ -414,7 +414,7 @@ map<set<int>, int> SRPTree::Mine()
 		f = (*it).second->elementFrequency;
 		if( f >= freqMinSup)
 			searchElements.insert((*it).first);
-		else if (f > rareMinSup)
+		else if (f >= rareMinSup)
 			rareItems.insert((*it).first);
 	}
 	
@@ -485,22 +485,22 @@ map<set<int>, int> SRPTree::Mine()
 		// fptree.header_table.clear();
 		// fptree.header_table.insert(pair<int, shared_ptr<FPNode<int>>>(searchElement, headerTableItem));
 
-		std::map<int, uint64_t> frequency_by_item;
-		for (const Transaction<int>& transaction : conditionalBase) {
-			for (const int& item : transaction) {
-				++frequency_by_item[item];
-			}
-		}
-		for (auto it = frequency_by_item.cbegin(); it != frequency_by_item.cend(); ) {
-			const uint64_t item_frequency = (*it).second;
-			if ((item_frequency < rareMinSup) || (item_frequency >= freqMinSup)){
-				frequency_by_item.erase(it++);
-				cout <<"--" << (*it).first << endl;
-			}
-			else {
-				cout <<"++"<< (*it).first << endl;
-				++it; }
-		}
+		// std::map<int, uint64_t> frequency_by_item;
+		// for (const Transaction<int>& transaction : conditionalBase) {
+		// 	for (const int& item : transaction) {
+		// 		++frequency_by_item[item];
+		// 	}
+		// }
+		// for (auto it = frequency_by_item.cbegin(); it != frequency_by_item.cend(); ) {
+		// 	const uint64_t item_frequency = (*it).second;
+		// 	if ((item_frequency < rareMinSup) || (item_frequency >= freqMinSup)){
+		// 		frequency_by_item.erase(it++);
+		// 		cout <<"--" << (*it).first << endl;
+		// 	}
+		// 	else {
+		// 		cout <<"++"<< (*it).first << endl;
+		// 		++it; }
+		// }
 
 
 		
