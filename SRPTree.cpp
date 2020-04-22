@@ -403,7 +403,8 @@ map<set<int>, int> SRPTree::Mine()
 {
 	//cout << "mining" << endl;
 	set<int> searchElements;
-
+	set<int> rareItems;
+	
 	int f;
 	// get rare items
 	for(map<int, ConnectionRow*>::iterator it = connectionTable.begin(); it != connectionTable.end(); it ++)
@@ -411,9 +412,10 @@ map<set<int>, int> SRPTree::Mine()
 		f = (*it).second->elementFrequency;
 		if( f >= freqMinSup)
 			searchElements.insert((*it).first);
+		else if (f > rareMinSup)
+			rareItems.insert((*it).first);
 	}
 	
-	set<int> rareItems(searchElements);
 	map <int, int> _connectedElements;
 	
 	// get items co occuring with rare items
