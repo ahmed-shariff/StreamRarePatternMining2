@@ -100,7 +100,7 @@ int SRPTree::Initialize()
 	}
 	
 	cout << "Database name is " << filename.data() << endl;
-	
+	cout << "Configuration " << activeConfiguration << endl;
 	//Open file
 	in.open(filename);
 
@@ -180,7 +180,7 @@ void SRPTree::ExtractIntegersToList()
 		/* Checking the given word is integer or not */
 		if (stringstream(temp) >> found)
 		{
-			cout << found << " ";
+			// cout << found << " ";
 			iTransaction.push_back(found);
 		}
 
@@ -188,7 +188,7 @@ void SRPTree::ExtractIntegersToList()
 		temp = "";
 	}
 	sTransaction.clear();
-	cout << endl;
+	// cout << endl;
 }
 
 void SRPTree::AddElementFrequency()
@@ -450,7 +450,7 @@ map<set<int>, int> SRPTree::Mine()
 		if (itemFrequency >= freqMinSup)
 			freqItem = true;
 		conditionalBase.clear();
-		cout << "*****" << *searchElement << endl;
+		// cout << "*****" << *searchElement << endl;
 		if(useDfs){
 			searchList.clear();                 
 			int freq = connectionTable[*searchElement]->elementFrequency;
@@ -473,11 +473,11 @@ map<set<int>, int> SRPTree::Mine()
 		}
 		
 
-		for ( auto b: conditionalBase){
-			for (auto e: b)
-				cout << e << " + ";
-			cout << endl;
-		}
+		// for ( auto b: conditionalBase){
+		// 	for (auto e: b)
+		// 		cout << e << " + ";
+		// 	cout << endl;
+		// }
 		FPTree<int> fptree(conditionalBase, rareMinSup, 1000);
 		
 		// making sure the header table in the FPtree only has the item we are looking at
@@ -505,11 +505,11 @@ map<set<int>, int> SRPTree::Mine()
 
 		
 		const std::set<Pattern<int>> patterns = fptree_growth( fptree );
-		for ( auto [b, f]: patterns){
-			for (auto e: b)
-				cout << e << " / ";
-			cout << endl;
-		}
+		// for ( auto [b, f]: patterns){
+		// 	for (auto e: b)
+		// 		cout << e << " / ";
+		// 	cout << endl;
+		// }
 		std::set<int> singleItem;
 		singleItem.insert(*searchElement);
 		//set<int> singleitem( *searchElement, 1);
@@ -570,19 +570,21 @@ map<set<int>, int> SRPTree::Mine()
 	
 	filepatternwrite.open(sfilenamewrite.c_str(), std::ofstream::out | std::ofstream::app);
 
+	cout << "Number of non-rare rare items: " << rarePatterns.size() << endl;
+	cout << "File output: " << sfilenamewrite << endl;
 	if(filepatternwrite.is_open())
 	{
-		cout << "file writing... " << endl;
+		// cout << "file writing... " << endl;
 		filepatternwrite << "mining count" << filewrite <<endl;
 		for (auto p: rarePatterns) {
 			filepatternwrite << "{ ";
-			cout << "{ ";
+			// cout << "{ ";
 			for (auto s: p.first){
 				filepatternwrite << s << " ";
-				cout << s << " ";
+				// cout << s << " ";
 			}
 			filepatternwrite << "} \t\tf: "<< p.second << endl;
-			cout << "} \t\tf: "<< p.second << endl;
+			// cout << "} \t\tf: "<< p.second << endl;
 		}
 		filewrite++;
 		filepatternwrite.close();

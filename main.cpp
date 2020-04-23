@@ -30,6 +30,7 @@ int main()
 
 	cout << "Reading DB..." << endl;
 	fileperfwrite << "Reading DB..." << endl;
+	int totalRarePatterns = 0;
 	while (srpTree.ReadTransaction())
 	{
 		readCount++;
@@ -53,7 +54,7 @@ int main()
 			cout << "Time spent in reading transactions (in seconds)" << time_spent << endl;
 			fileperfwrite << "Time spent in reading transactions (in seconds)" << time_spent << endl;
 
-			srpTree.Mine();
+			totalRarePatterns +=  srpTree.Mine().size();
 			end2 = clock();
 			time_spent = (double)(end2 - begin2) / CLOCKS_PER_SEC;
 			cout << "Time spent in mining (in seconds)" << time_spent << endl;
@@ -72,7 +73,9 @@ int main()
 	end1 = clock();
 	srpTree.Finalize();
 	cout << "Mining Completed..." << endl;
+	cout << "Total rare patterns: " << totalRarePatterns << endl;
 	fileperfwrite << "Mining Completed..." << endl;
+	fileperfwrite << "Total rare patterns: " << totalRarePatterns << endl;
 
 	time_spent = (double)(end1 - begin1)/CLOCKS_PER_SEC;
 
