@@ -1,7 +1,6 @@
 #include <iostream>
 #include "SRPTree.h"
 #include <ctime>
-//#include <unistd.h>
 
 using namespace std;
 
@@ -64,10 +63,6 @@ int main()
 
 			readCount = 0;
 		}
-		//Test code for first 100 elements
-		//if (readCount == 100)
-		//	break;
-
 	}
 	end1 = clock();
 	srpTree.Finalize();
