@@ -14,17 +14,11 @@ using namespace std;
 struct TreeNode {
 	int elementValue;
 	int elementFrequency;
-	//TreeNode* down;
 	TreeNode* up;
 	list<TreeNode*> down;
 	TreeNode* nextSimilar;
 	TreeNode* prevSimilar;
 };
-
-//struct ConnectionElement {
-//	int elementValue;
-//	int elementFrequency;
-//};
 
 struct ConnectionRow {
 	TreeNode* firstOccurrence;
@@ -47,9 +41,7 @@ class SRPTree {
 	TreeNode *rootNode;
 	bool useDfs;
 
-	//vector <ConnectionRow*> connectionTable;
 	map <int, ConnectionRow*> connectionTable;
-	//vector<int> dbElementFrequency; //Vector created to store the frequency of each element
 	string sTransaction;  //One Transaction information in string
 	list<int> iTransaction;  //List of integers for each transaction
 
@@ -71,6 +63,4 @@ public:
 	int ReadTransaction();
 	int GetWindowSize();
 	map<set<int>, int> Mine();
-
-	//void GetFreqMinSup();
 };
